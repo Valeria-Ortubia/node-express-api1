@@ -1,20 +1,17 @@
 const express = require("express");
 const app = express();
 
-const path = require ("path");
+app.use(express.json());
 
-app.use(express.static(path.join(__dirname, "public")));
 
-//const productosRouter = require('./routes/productos.routes');
-app.use("/productos", productosRouter);
+const productosRouter = require('./routes/productos.router');
+app.use('/productos', productosRouter);
 
-app.get("/", (req,res) => {
-    res.send("Hola desde Express")
-});
-app.get("/factura", (req, res) => {
-    res.sendFile(path.join(__dirname, "private", "factura.html"))
+
+app.get("/", (req, res) => {
+    res.send("Hola desde express...");
 });
 
 const PORT = 3000;
 
-app.listen(PORT, () => console.log('htpp://localhost:${PORT}'));
+app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
