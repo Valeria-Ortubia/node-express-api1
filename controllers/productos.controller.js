@@ -34,25 +34,26 @@ const insertProduct = (req, res) => {
 
     const { nombre, precio, bodegaID, categoriaID, stock } = req.body;
 
-    const sql = "INSERT INTO productos (nombre, precio, bodegaID, categoriaID, stock) VALUES (?, ?, ?, ?, ?)";
+    const sql = "INSERT INTO productos (nombre, precio, bodegaID, categoriaID, stock, foto) VALUES (?, ?, ?, ?, ?, ?)";
 
-    db.query(sql, [nombre, precio, bodegaID, categoriaID, stock], (error, result) => {
+    db.query(sql, [nombre, precio, bodegaID, categoriaID, stock, req.file.filename], (error, result) => {
         if (error) {
             return res.status(500).json({error: "Error en la consulta"});
         };
-        const resultado = {...res.body, id: result.insertId}
-        res.json(resultado);
+        const resp = `Producto ${result.insertId} creado con exito!!!`;
+        const prodc = { ...req.body, id: result.insertId, foto: req.file.filename }
+        res.json({respuesta: resp, datos: prodc });
     });
 };
 
 const updateProduct = (req, res) => {
-    
+    console.log(req.file)
     const { id } = req.params;
     const { nombre, precio, bodegaID, categoriaID, stock } = req.body;
 
-    const sql = "UPDATE productos SET nombre = ?, precio = ?, bodegaID = ?, categoriaID = ?, stock = ? WHERE id_productos = ?";
+    const sql = "UPDATE productos SET nombre = ?, precio = ?, bodegaID = ?, categoriaID = ?, stock = ?, foto = ? WHERE id_productos = ?";
 
-    db.query(sql, [nombre, precio, bodegaID, categoriaID, stock , id], (error, result) => {
+    db.query(sql, [nombre, precio, bodegaID, categoriaID, stock, req.file.filename , id], (error, result) => {
 
         if (error) {
             return res.status(500).json({error: "Error en la consulta"});
@@ -60,8 +61,9 @@ const updateProduct = (req, res) => {
         if (result.affectedRows == 0){
             return res.status(404).json({error: "No existe ese producto"});
         };
-        const prodc = { ...req.body, ...req.params }
-        res.json(prodc);
+        const resp = `Producto ${id} actualizado con exito!!!`;
+        const prodc = { ...req.body, ...req.params, foto: req.file.filename }
+        res.json({respuesta: resp, datos: prodc });
     });
 };
 
