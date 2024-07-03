@@ -1,20 +1,17 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 
-const path = require ("path");
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")))
 
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
 
-//const productosRouter = require('./routes/productos.routes');
-app.use("/productos", productosRouter);
+const productosRoutes = require('./routes/productos.routes');
 
-app.get("/", (req,res) => {
-    res.send("Hola desde Express")
-});
-app.get("/factura", (req, res) => {
-    res.sendFile(path.join(__dirname, "private", "factura.html"))
-});
+app.use("/productos", productosRoutes);
 
-const PORT = 3000;
+const port = process.env.PORT || 3001;
 
-app.listen(PORT, () => console.log('htpp://localhost:${PORT}'));
+app.listen(port, () => console.log(`http://localhost:${port}`));
