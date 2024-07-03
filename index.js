@@ -1,17 +1,17 @@
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 
+const path = require("path");
+app.use(express.static(path.join(__dirname, "public")))
+
 app.use(express.json());
 
+const productosRoutes = require('./routes/productos.routes');
 
-const productosRouter = require('./routes/productos.router');
-app.use('/productos', productosRouter);
+app.use("/productos", productosRoutes);
 
+const port = process.env.PORT || 3001;
 
-app.get("/", (req, res) => {
-    res.send("Hola desde express...");
-});
-
-const PORT = 3000;
-
-app.listen(PORT, () => console.log(`http://localhost:${PORT}`));
+app.listen(port, () => console.log(`http://localhost:${port}`));
